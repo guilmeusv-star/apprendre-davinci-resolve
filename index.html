@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Formation complète DaVinci Resolve en 100 jours - Apprentissage structuré et interactif">
+    <meta name="theme-color" content="#0a0a0f">
+    <title>DaVinci Resolve 100 Jours</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: #111118;
+            --surface2: #1a1a24;
+            --border: rgba(255,255,255,0.07);
+            --border2: rgba(255,255,255,0.13);
+            --text: #f0f0f8;
+            --muted: #8888a8;
+            --accent: #7c5cfc;
+            --accent2: #c084fc;
+            --green: #22d3a0;
+            --amber: #fbbf24;
+            --blue: #60a5fa;
+            --coral: #f87171;
+            --red: #ef4444;
+            --radius: 12px;
+            --radius-lg: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 15px;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 20% 10%, rgba(124,92,252,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 80% 80%, rgba(34,211,160,0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+
+        .hero { margin-bottom: 2.5rem; }
+        .hero-eyebrow {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--accent2);
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-title {
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 800;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #f0f0f8 30%, #c084fc 80%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.75rem;
+        }
+
+        .hero-sub { color: var(--muted); font-size: 15px; font-weight: 300; }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .stat {
+            background: var(--surface);
+            border: 0.5px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat:hover {
+            border-color: var(--accent2);
+            background: var(--surface2);
+            transform: translateY(-2px);
+        }
+
+        .stat-num {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--accent2);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .stat-label { font-size: 12px; color: var(--muted); font-weight: 500; }
+
+        .progress-wrap {
+            background: var(--surface);
+            border: 0.5px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .progress-title { font-size: 13px; font-weight: 600; }
+        .progress-pct { font-size: 13px; color: var(--accent2); font-weight: 500; }
+        .progress-bar { height: 8px; background: var(--surface2); border-radius: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 20px; transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .progress-sub { margin-top: 8px; font-size: 12px; color: var(--muted); }
+
+        .phase-nav {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            align-items: center;
+        }
+
+        .phase-btn {
+            padding: 8px 16px;
+            border-radius: 30px;
+            border: 0.5px solid var(--border2);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            background: transparent;
+            color: var(--muted);
+            transition: all 0.2s;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+
+        .phase-btn:hover { color: var(--text); border-color: var(--border2); }
+        .phase-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-wrap {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-wrap input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            background: var(--surface);
+            border: 0.5px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text);
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-wrap input:focus { border-color: var(--border2); }
+        .search-wrap input::placeholder { color: var(--muted); }
+        .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 14px; pointer-events: none; }
+
+        .action-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 8px 14px;
+            border-radius: var(--radius);
+            border: 0.5px solid var(--border2);
+            background: transparent;
+            color: var(--muted);
+            font-size: 12px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn:hover { border-color: var(--accent2); color: var(--accent2); }
+        .btn:active { transform: scale(0.95); }
+
+        .days-list { display: grid; gap: 8px; }
+
+        .day-card {
+            background: var(--surface);
+            border: 0.5px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .day-card:hover { border-color: var(--border2); }
+        .day-card.done { border-left: 3px solid var(--green); }
+        .day-card.is-open { border-color: rgba(124,92,252,0.4); background: rgba(124,92,252,0.02); }
+
+        .day-head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.9rem 1.1rem;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .day-card:hover .day-head {
+            background: rgba(124,92,252,0.04);
+        }
+
+        .day-chip {
+            font-size: 11px;
+            font-weight: 700;
+            background: var(--surface2);
+            color: var(--muted);
+            padding: 4px 10px;
+            border-radius: 20px;
+            white-space: nowrap;
+            min-width: 60px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .day-card.done .day-chip { background: rgba(34,211,160,0.12); color: var(--green); }
+
+        .day-title-text { flex: 1; font-size: 14px; font-weight: 500; min-width: 200px; }
+
+        .badges {
+            display: flex;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .badge {
+            font-size: 9px;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .b-note { background: rgba(96,165,250,0.12); color: var(--blue); }
+        .b-tip { background: rgba(251,191,36,0.12); color: var(--amber); }
+        .b-video { background: rgba(248,113,113,0.12); color: var(--coral); }
+        .b-exo { background: rgba(124,92,252,0.12); color: var(--accent2); }
+
+        .chevron { color: var(--muted); font-size: 12px; transition: transform 0.2s; flex-shrink: 0; }
+        .is-open .chevron { transform: rotate(180deg); }
+        .done-mark { color: var(--green); font-size: 14px; margin-left: 2px; flex-shrink: 0; }
+
+        .day-body {
+            display: none;
+            padding: 0 1.1rem 1.1rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .day-body.open {
+            display: block;
+            max-height: 2000px;
+        }
+
+        .section-sep { height: 0.5px; background: var(--border); margin-bottom: 1rem; }
+
+        .section-title {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 8px;
+            margin-top: 10px;
+        }
+
+        .section-title:first-of-type { margin-top: 0; }
+
+        .note-block {
+            background: var(--surface2);
+            border-radius: var(--radius);
+            padding: 0.85rem 1rem;
+            font-size: 13.5px;
+            color: var(--text);
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .tip-block {
+            border-left: 2.5px solid var(--amber);
+            padding: 0.75rem 1rem;
+            font-size: 13.5px;
+            color: var(--text);
+            margin-bottom: 12px;
+            line-height: 1.6;
+            background: rgba(251,191,36,0.03);
+            border-radius: 0 var(--radius) var(--radius) 0;
+        }
+
+        .video-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13.5px;
+            color: var(--blue);
+            text-decoration: none;
+            padding: 8px;
+            margin-bottom: 12px;
+            border-radius: var(--radius);
+            background: rgba(96,165,250,0.05);
+            border: 0.5px solid rgba(96,165,250,0.15);
+            transition: all 0.2s;
+        }
+
+        .video-link:hover { color: #93c5fd; background: rgba(96,165,250,0.1); }
+        .video-icon { font-size: 16px; }
+
+        .exo-block {
+            background: rgba(124,92,252,0.08);
+            border: 0.5px solid rgba(124,92,252,0.2);
+            border-radius: var(--radius);
+            padding: 0.85rem 1rem;
+            font-size: 13.5px;
+            color: var(--text);
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .personal-notes {
+            background: rgba(192,132,252,0.05);
+            border: 0.5px solid rgba(192,132,252,0.15);
+            border-radius: var(--radius);
+            padding: 0.85rem 1rem;
+            margin-bottom: 12px;
+        }
+
+        .personal-notes textarea {
+            width: 100%;
+            min-height: 80px;
+            background: var(--surface2);
+            border: 0.5px solid var(--border);
+            border-radius: var(--radius);
+            padding: 10px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 13px;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .personal-notes textarea:focus {
+            border-color: var(--accent2);
+        }
+
+        .complex-btn {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .complete-btn {
+            flex: 1;
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            border: 0.5px solid var(--border2);
+            background: transparent;
+            color: var(--muted);
+            font-size: 13px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .complete-btn:hover { border-color: var(--green); color: var(--green); }
+        .complete-btn.done { background: rgba(34,211,160,0.12); border-color: var(--green); color: var(--green); }
+
+        .note-btn {
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            border: 0.5px solid var(--border2);
+            background: transparent;
+            color: var(--accent2);
+            font-size: 12px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .note-btn:hover { background: rgba(192,132,252,0.1); border-color: var(--accent2); }
+
+        .empty {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--muted);
+        }
+
+        .phase-divider {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent2);
+            padding: 0.75rem 0 0.5rem;
+            margin-top: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: var(--surface2);
+            border: 0.5px solid var(--border2);
+            border-radius: var(--radius);
+            padding: 1rem 1.25rem;
+            margin-bottom: 10px;
+            font-size: 13px;
+            color: var(--text);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: slideInRight 0.3s ease;
+            pointer-events: auto;
+            border-left: 3px solid var(--accent2);
+        }
+
+        .toast.success { border-left-color: var(--green); }
+        .toast.error { border-left-color: var(--red); }
+
+        @keyframes slideInRight {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.open {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border: 0.5px solid var(--border2);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 1.5rem;
+            justify-content: flex-end;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover { background: var(--accent2); }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: 0.5px solid var(--border2);
+            padding: 10px 18px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover { border-color: var(--accent2); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-item {
+            background: var(--surface2);
+            border-radius: var(--radius);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .stat-item-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent2);
+            margin-bottom: 4px;
+        }
+
+        .stat-item-label {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .phase-stats {
+            margin-bottom: 1.5rem;
+        }
+
+        .phase-stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 0.5px solid var(--border);
+        }
+
+        .phase-stat-row:last-child { border-bottom: none; }
+        .phase-stat-label { color: var(--muted); font-size: 13px; }
+        .phase-stat-value { font-weight: 600; color: var(--accent2); }
+
+        @media (max-width: 768px) {
+            .wrapper { padding: 1.5rem 1rem 3rem; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .badges { display: none; }
+            .day-title-text { min-width: auto; font-size: 13px; }
+            .controls { flex-direction: column; }
+            .search-wrap { min-width: 100%; }
+            .toast-container { bottom: 1rem; right: 1rem; left: 1rem; }
+            .toast { margin-left: auto; margin-right: auto; }
+            .modal-content { padding: 1.5rem; width: 95%; }
+        }
+
+        @media (max-width: 480px) {
+            .day-head { gap: 8px; padding: 0.75rem 0.9rem; }
+            .day-chip { min-width: 55px; font-size: 10px; padding: 3px 8px; }
+            .stat-num { font-size: 24px; }
+            .hero-title { font-size: 1.8rem; }
+            .chevron { display: none; }
+        }
+
+        .app-footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            border-top: 1px solid rgba(124, 92, 252, 0.2);
+            color: #888;
+            font-size: 0.85rem;
+            margin-top: 3rem;
+        }
+
+        .app-footer p {
+            margin: 0.5rem 0;
+            line-height: 1.4;
+        }
+
+        .app-footer strong {
+            color: #7c5cfc;
+            font-weight: 600;
+        }
+
+        /* Compteur de visiteurs */
+        .visitor-counter {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #7c5cfc 0%, #c084fc 100%);
+            color: #fff;
+            padding: 16px 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 32px rgba(124, 92, 252, 0.3);
+            z-index: 500;
+            animation: pulse-visitor 2s ease-in-out infinite;
+        }
+
+        .visitor-icon {
+            font-size: 18px;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        @keyframes pulse-visitor {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @media (max-width: 768px) {
+            .visitor-counter {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 16px;
+                font-size: 12px;
+            }
+        }
+    </style>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CX87L0DK3Z"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-CX87L0DK3Z');
+    </script>
+</head>
+<body>
+
+<div class="wrapper">
+
+    <div class="hero">
+        <div class="hero-eyebrow">Formation Complète • Débutant → Pro</div>
+        <h1 class="hero-title">DaVinci Resolve<br>en 100 Jours</h1>
+        <p class="hero-sub">30 minutes par jour • YouTube & Réseaux Sociaux • De zéro à professionnel</p>
+    </div>
+
+    <div class="stats">
+        <div class="stat"><span class="stat-num">100</span><span class="stat-label">Jours</span></div>
+        <div class="stat"><span class="stat-num">30</span><span class="stat-label">Min / jour</span></div>
+        <div class="stat"><span class="stat-num">5</span><span class="stat-label">Phases</span></div>
+        <div class="stat"><span class="stat-num" id="doneCount">0</span><span class="stat-label">Complétés</span></div>
+    </div>
+
+    <div class="progress-wrap">
+        <div class="progress-top">
+            <span class="progress-title">Progression globale</span>
+            <span class="progress-pct" id="progressPct">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        <div class="progress-sub" id="progressSub">0 / 100 jours complétés</div>
+    </div>
+
+    <div class="phase-nav" id="phaseNav"></div>
+
+    <div class="controls">
+        <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Rechercher un sujet...">
+        </div>
+        <div class="action-btns">
+            <button class="btn" id="statsBtn" title="Statistiques">📊</button>
+            <button class="btn" id="exportBtn" title="Exporter">💾</button>
+            <button class="btn" id="resetBtn" title="Réinitialiser">🔄</button>
+        </div>
+    </div>
+
+    <div class="days-list" id="daysList"></div>
+
+    <footer class="app-footer">
+        <p>🎬 DaVinci Resolve — 100 Jours de Formation</p>
+        <p>Créé par <strong>Van cleff Guilméus</strong> © 2026</p>
+    </footer>
+
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Compteur de visiteurs -->
+<div class="visitor-counter">
+    <span class="visitor-icon">👁️</span>
+    <span id="visitorText">Bienvenue !</span>
+</div>
+
+<div class="modal" id="statsModal">
+    <div class="modal-content">
+        <div class="modal-title">📊 Statistiques</div>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-item-value" id="totalDone">0</div>
+                <div class="stat-item-label">Jours complétés</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-item-value" id="completionRate">0%</div>
+                <div class="stat-item-label">Taux</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-item-value" id="daysRemaining">100</div>
+                <div class="stat-item-label">Restants</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-item-value" id="avgPerDay">0</div>
+                <div class="stat-item-label">Moy / jour</div>
+            </div>
+        </div>
+        <div class="phase-stats" id="phaseStats"></div>
+        <div class="modal-actions">
+            <button class="btn-secondary" onclick="closeStatsModal()">Fermer</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const phases = [
+    { id: 0, label: "Tous les jours" },
+    { id: 1, label: "Phase 1 — Bases (J1-20)" },
+    { id: 2, label: "Phase 2 — Montage (J21-45)" },
+    { id: 3, label: "Phase 3 — Audio & Effets (J46-65)" },
+    { id: 4, label: "Phase 4 — Étalonnage (J66-80)" },
+    { id: 5, label: "Phase 5 — Export & Pro (J81-100)" },
+];
+
+const phaseNames = {
+    1: "Phase 1 — Les Bases",
+    2: "Phase 2 — Montage Avancé",
+    3: "Phase 3 — Audio & Effets",
+    4: "Phase 4 — Étalonnage",
+    5: "Phase 5 — Export & Pro",
+};
+
+const days = [
+    {d:1,p:1,t:"Installer et découvrir l'interface",note:"DaVinci Resolve est divisé en 6 pages : Media, Cut, Edit, Fusion, Color, Deliver. Commencez par la page Edit.",tip:"Téléchargez la version gratuite sur Blackmagic Design. Pas besoin de la version Studio pour débuter.",video:"DaVinci Resolve débutant complet français",url:"https://www.youtube.com/results?search_query=davinci+resolve+debutant+complet+francais",exo:"Lancez Resolve, explorez chaque onglet en bas. Notez à quoi sert chaque page."},
+    {d:2,p:1,t:"Créer son premier projet",note:"Un projet = un ensemble de paramètres (résolution, framerate). Pour YouTube : 1920x1080, 25 ou 30 fps.",tip:"Nommez vos projets clairement : 'Vlog_01_2024'. Cela sauve beaucoup de temps.",video:"Créer un projet DaVinci Resolve paramètres",url:"https://www.youtube.com/results?search_query=davinci+resolve+creer+projet+parametres",exo:"Créez un projet '1920x1080 - 30fps' et importez 3 vidéos de test."},
+    {d:3,p:1,t:"Importer ses médias",note:"Utilisez la page Media pour organiser vos clips avant de les monter. Créez des dossiers (bins) par catégorie.",tip:"Toujours garder les fichiers sources au même endroit sur votre disque. Déplacer les fichiers casse les liens.",video:"Importer médias DaVinci Resolve organiser bins",url:"https://www.youtube.com/results?search_query=davinci+resolve+importer+media+organiser",exo:"Importez 5 clips, créez des bins 'Vidéos', 'Musique', 'Effets'."},
+    {d:4,p:1,t:"La timeline — comprendre le montage",note:"La timeline est votre espace de montage. Les pistes vidéo (V1, V2...) sont au-dessus, les pistes audio (A1, A2...) en dessous.",tip:"Raccourci essentiel : appuyez sur ESPACE pour lire/pauser votre montage.",video:"Timeline DaVinci Resolve expliquée débutant",url:"https://www.youtube.com/results?search_query=davinci+resolve+timeline+debutant",exo:"Glissez 3 clips dans la timeline. Réorganisez-les."},
+    {d:5,p:1,t:"Couper et tronquer des clips",note:"L'outil Blade (B) coupe un clip en deux. L'outil Select (A) vous permet de déplacer les clips.",tip:"Raccourci magique : Ctrl+Z annule, Ctrl+Y refait. Utilisez-les sans peur !",video:"Couper clips DaVinci Resolve tronquer",url:"https://www.youtube.com/results?search_query=davinci+resolve+couper+clips+tronquer",exo:"Prenez un clip de 2 min, coupez-le en 5 morceaux, gardez seulement les meilleurs."},
+    {d:6,p:1,t:"Naviguer dans la timeline",note:"Molette souris = zoom horizontal. Alt+Molette = zoom vertical. Barre d'espace = lecture.",tip:"Apprenez ces raccourcis : J (retour), K (pause), L (avance). Très utiles pour parcourir rapidement.",video:"Navigation timeline raccourcis DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+navigation+raccourcis+clavier",exo:"Montez une séquence de 30 secondes en utilisant uniquement les raccourcis clavier."},
+    {d:7,p:1,t:"Jour de révision et pratique libre",note:"Révisez les 6 premiers jours. Montez une petite séquence libre de 30 secondes avec vos propres vidéos.",tip:"La répétition est clé. Refaire les mêmes actions jusqu'à ce que ça devienne automatique.",video:"Récap DaVinci Resolve semaine 1 débutant",url:"https://www.youtube.com/results?search_query=davinci+resolve+recapitulatif+debutant",exo:"Créez une séquence de 30 secondes 'journée type' avec vos propres clips."},
+    {d:8,p:1,t:"Les transitions",note:"Les transitions relient deux clips. Allez dans Effects Library > Video Transitions. La plus utilisée : Cross Dissolve.",tip:"Moins c'est plus. Évitez les transitions flashy pour YouTube. Gardez Cross Dissolve ou Cut sec.",video:"Transitions DaVinci Resolve YouTube tuto",url:"https://www.youtube.com/results?search_query=davinci+resolve+transitions+youtube+tuto",exo:"Ajoutez des transitions entre chaque clip de votre séquence précédente."},
+    {d:9,p:1,t:"Ajouter des titres et textes",note:"Dans Effects Library > Titles, vous trouvez des templates de texte. Glissez-los sur une piste vidéo au-dessus de votre contenu.",tip:"Pour YouTube : utilisez des titres en bas de l'écran (lower thirds) pour présenter des personnes ou des infos.",video:"Ajouter textes titres DaVinci Resolve français",url:"https://www.youtube.com/results?search_query=davinci+resolve+titres+textes+tuto+francais",exo:"Ajoutez votre nom et la date sur votre séquence avec un titre personnalisé."},
+    {d:10,p:1,t:"Personnaliser les textes",note:"Double-cliquez sur un titre dans la timeline pour l'éditer dans l'Inspector. Changez police, taille, couleur, position.",tip:"Choisissez 1 ou 2 polices maximum pour toute votre vidéo. La cohérence = professionnalisme.",video:"Personnaliser titres DaVinci Resolve police couleur",url:"https://www.youtube.com/results?search_query=davinci+resolve+personnaliser+texte+police+couleur",exo:"Créez un générique d'intro et un générique de fin pour votre chaîne YouTube."},
+    {d:11,p:1,t:"Gérer le volume audio de base",note:"Sur chaque clip audio dans la timeline, vous pouvez régler le volume avec la barre blanche horizontale au milieu du clip.",tip:"Niveau recommandé pour YouTube : -12dB à -6dB. Évitez d'aller dans le rouge (clipping).",video:"Audio volume DaVinci Resolve débutant",url:"https://www.youtube.com/results?search_query=davinci+resolve+audio+volume+debutant",exo:"Réglez le volume de tous vos clips pour qu'ils soient au même niveau sonore."},
+    {d:12,p:1,t:"Ajouter une musique de fond",note:"Importez votre musique dans le Media Pool, puis glissez-la sur une piste audio sous vos clips vidéo.",tip:"Sites pour musique libre de droits : YouTube Audio Library (gratuit), Pixabay (gratuit), Epidemic Sound (payant).",video:"Ajouter musique fond DaVinci Resolve",url:"https://www.youtube.com/results?search_query=davinci+resolve+musique+fond+libre+droits",exo:"Ajoutez une musique de fond à votre montage et équilibrez son volume avec votre voix."},
+    {d:13,p:1,t:"Page Cut vs Edit",note:"La page Cut est pour le montage rapide. La page Edit est plus complète et précise. Pour YouTube, restez sur Edit.",tip:"La page Cut est idéale pour un premier assemblage rapide, puis vous peaufinez dans Edit.",video:"Page Cut vs Edit DaVinci différence",url:"https://www.youtube.com/results?search_query=davinci+resolve+page+cut+vs+edit+difference",exo:"Faites un premier assemblage sur Cut, puis peaufinez sur Edit."},
+    {d:14,p:1,t:"Exporter sa première vidéo",note:"Allez sur la page Deliver. Choisissez 'YouTube' dans les presets. Résolution : 1080p, Format : MP4, Codec : H.264.",tip:"Format H.264 = fichier léger pour YouTube. Format DNxHR/ProRes = qualité maximale pour archiver.",video:"Exporter YouTube DaVinci Resolve 1080p MP4",url:"https://www.youtube.com/results?search_query=davinci+resolve+exporter+youtube+1080p+mp4",exo:"Exportez votre montage en MP4 1080p et vérifiez le résultat."},
+    {d:15,p:1,t:"Révision semaine 2",note:"Révisez transitions, textes, audio, export. Vous êtes capable de monter et exporter une vidéo simple !",tip:"À ce stade, montez une petite vidéo de A à Z sans aide. C'est le meilleur test d'apprentissage.",video:"Révision montage vidéo YouTube DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+projet+complet+debutant+youtube",exo:"Montez une vidéo de 1 minute de A à Z et exportez-la."},
+    {d:16,p:1,t:"Les outils de découpe avancés",note:"Ripple Trim (W) supprime l'espace vide après une coupe. Roll Edit décale le point de coupe entre deux clips.",tip:"Le Ripple Trim est votre meilleur ami pour éviter les trous noirs dans la timeline.",video:"Outils découpe avancés DaVinci Ripple Trim",url:"https://www.youtube.com/results?search_query=davinci+resolve+ripple+trim+roll+edit+tuto",exo:"Entraînez-vous à utiliser Ripple Trim et Roll Edit sur une séquence de 10 clips."},
+    {d:17,p:1,t:"Organiser sa timeline proprement",note:"Utilisez des couleurs pour identifier vos clips (clic droit > Change Clip Color). Ajoutez des marqueurs (M).",tip:"Une timeline propre = un montage rapide. Prenez 5 min à organiser avant de commencer.",video:"Organisation timeline DaVinci marqueurs couleurs",url:"https://www.youtube.com/results?search_query=davinci+resolve+organiser+timeline+marqueurs+couleurs",exo:"Colorisez vos clips par type : vidéo=vert, musique=bleu, effets=orange."},
+    {d:18,p:1,t:"Les effets de vitesse",note:"Clic droit sur un clip > Change Clip Speed. Mettez 50% pour du ralenti, 200% pour accéléré.",tip:"Pour un ralenti fluide, filmez à 60fps et ralentissez à 50% dans Resolve (résultat = 30fps fluide).",video:"Ralenti accéléré DaVinci Resolve slow motion",url:"https://www.youtube.com/results?search_query=davinci+resolve+ralenti+slow+motion+tuto+francais",exo:"Créez une séquence avec un effet ralenti et un effet accéléré."},
+    {d:19,p:1,t:"L'Inspector et les paramètres",note:"L'Inspector (en haut à droite) permet de modifier position, rotation, zoom, opacité de chaque clip.",tip:"Vous pouvez recadrer un clip sans le retourner au tournage grâce au zoom dans l'Inspector.",video:"Inspector DaVinci Resolve position zoom opacité",url:"https://www.youtube.com/results?search_query=davinci+resolve+inspector+position+zoom+opacite",exo:"Prenez un clip, zoomez à 120% et centrez-le sur un sujet précis."},
+    {d:20,p:1,t:"Bilan Phase 1",note:"Vous maîtrisez les bases ! Vous pouvez monter, habiller, et exporter une vidéo YouTube correcte.",tip:"Filmez quelque chose cette semaine et montez-le de A à Z.",video:"Projet complet DaVinci débutant phase 1",url:"https://www.youtube.com/results?search_query=davinci+resolve+projet+complet+debutant+phase+1",exo:"Créez une vidéo YouTube de 2-3 minutes complète avec intro, musique, titres et export."},
+    {d:21,p:2,t:"Les keyframes — animer des éléments",note:"Un keyframe enregistre la valeur d'un paramètre à un instant précis. Entre deux keyframes, Resolve interpole.",tip:"Pour animer un titre qui apparaît : keyframe opacité 0% au début, 100% après 0.5 seconde.",video:"Keyframes animation DaVinci Resolve tuto",url:"https://www.youtube.com/results?search_query=davinci+resolve+keyframes+animation+tuto",exo:"Animez un titre qui glisse du bas vers le haut avec des keyframes."},
+    {d:22,p:2,t:"Les masques et recadrages",note:"L'outil Crop dans l'Inspector vous permet de rogner les bords. Les Power Windows servent aux masques.",tip:"Utilisez le crop pour mettre deux vidéos côte à côte (split screen).",video:"Masques recadrage split screen DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+crop+masque+split+screen",exo:"Créez un split screen avec deux vidéos côte à côte."},
+    {d:23,p:2,t:"Superposer des vidéos (Picture in Picture)",note:"Mettez une vidéo sur V2 (au-dessus de V1), réduisez sa taille et repositionnez-la.",tip:"Le PiP est parfait pour les réactions YouTube, les tutos ou les commentaires en face cam.",video:"Picture in picture incrustation DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+picture+in+picture+incrustation+tuto",exo:"Créez un effet PiP avec votre webcam par-dessus une vidéo principale."},
+    {d:24,p:2,t:"Les transitions avancées",note:"Dans Effects Library > Toolbox > Video Transitions. Essayez : Dip to Black, Smooth Cut.",tip:"Smooth Cut est magique pour les coupures dans un discours.",video:"Transitions avancées Smooth Cut DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+smooth+cut+transitions+avancees",exo:"Utilisez Smooth Cut pour assembler 3 extraits d'une même interview."},
+    {d:25,p:2,t:"Créer une intro YouTube",note:"Une bonne intro YouTube dure moins de 5 secondes. Utilisez des textes animés, un logo, une musique forte.",tip:"Les intros trop longues font fuir. 3 secondes max pour capter l'attention.",video:"Créer intro YouTube DaVinci animation",url:"https://www.youtube.com/results?search_query=davinci+resolve+intro+youtube+animation+tuto",exo:"Créez une intro de 3 secondes avec votre nom de chaîne animé."},
+    {d:26,p:2,t:"Les J-cuts et L-cuts",note:"J-cut : l'audio du clip suivant démarre avant que la vidéo ne change. L-cut : l'inverse.",tip:"Les J-cuts et L-cuts sont utilisés dans tous les films professionnels.",video:"J-cut L-cut DaVinci Resolve français",url:"https://www.youtube.com/results?search_query=davinci+resolve+j+cut+l+cut+tuto+francais",exo:"Montez un dialogue de 1 minute en utilisant uniquement des J-cuts et L-cuts."},
+    {d:27,p:2,t:"Montage au rythme de la musique",note:"Activez les waveforms audio. Coupez vos clips sur les beats.",tip:"Utilisez les marqueurs (M) pour marquer les beats de la musique avant de monter..",video:"Montage rythme musique beat DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+montage+rythme+musique+beat+tuto",exo:"Créez une séquence de 30 secondes où chaque coupe tombe sur un beat musical."},
+    {d:28,p:2,t:"La stabilisation vidéo",note:"Clic droit sur un clip > Stabilize dans la page Edit.",tip:"Stabilisez uniquement si votre vidéo tremble beaucoup. Trop = effet de flottement bizarre.",video:"Stabilisation vidéo DaVinci Resolve tuto",url:"https://www.youtube.com/results?search_query=davinci+resolve+stabilisation+video+tuto",exo:"Stabilisez une vidéo tremblante et comparez avant/après."},
+    {d:29,p:2,t:"Rogner et recadrer intelligemment",note:"Si vous devez zoomer ou recadrer, gardez une marge. Un clip 4K recadré à 150% reste en Full HD.",tip:"Filmez en 4K pour avoir de la marge au montage en cas de recadrage.",video:"Recadrage zoom 4K DaVinci Resolve",url:"https://www.youtube.com/results?search_query=davinci+resolve+recadrage+zoom+4k+tuto",exo:"Prenez un clip, recadrez-le pour éliminer un élément gênant."},
+    {d:30,p:2,t:"Révision mi-parcours",note:"30 jours accomplis ! Vous maîtrisez le montage de base et avancé.",tip:"Réécoutez vos vidéos sans regarder l'image. Si l'histoire tient uniquement à l'audio, c'est bon.",video:"Révision 30 jours DaVinci Resolve projet",url:"https://www.youtube.com/results?search_query=davinci+resolve+projet+avance+youtube+montage",exo:"Montez une vidéo complète de 3-5 min en appliquant toutes les techniques apprises."},
+    {d:31,p:2,t:"Les effets de zoom (punch-in)",note:"Avec les keyframes sur l'échelle de zoom, créez un punch-in : zoom rapide sur un moment clé.",tip:"Le punch-in est très utilisé sur YouTube pour emphasiser une réaction.",video:"Zoom punch-in effet DaVinci Resolve",url:"https://www.youtube.com/results?search_query=davinci+resolve+zoom+punch+in+effet+tuto",exo:"Ajoutez 3 effets punch-in sur les moments forts d'une de vos vidéos."},
+    {d:32,p:2,t:"Créer des sous-titres",note:"Dans la page Edit : Timeline > Add Subtitle Track. Tapez vos sous-titres ou importez un fichier .srt.",tip:"Les sous-titres augmentent les vues de 12% en moyenne sur YouTube.",video:"Sous-titres SRT DaVinci Resolve français",url:"https://www.youtube.com/results?search_query=davinci+resolve+sous+titres+srt+tuto+francais",exo:"Ajoutez des sous-titres sur 30 secondes d'une de vos vidéos."},
+    {d:33,p:2,t:"Les effets de flou",note:"Dans Effects Library > Filters > Blur. Gaussian Blur est le plus polyvalent.",tip:"Flouter un logo ou une plaque d'immatriculation est obligatoire légalement.",video:"Flou Blur masque visage DaVinci Resolve",url:"https://www.youtube.com/results?search_query=davinci+resolve+flou+blur+masque+visage+tuto",exo:"Floutez un élément précis (logo, plaque) dans une vidéo."},
+    {d:34,p:2,t:"Screen recording et tutos écran",note:"Pour les tutoriels, filmez votre écran avec OBS (gratuit) puis montez.",tip:"Résolution recommandée pour screen record : 1920x1080. Framerate : 30fps.",video:"Screen recording OBS DaVinci Resolve tuto",url:"https://www.youtube.com/results?search_query=obs+davinci+resolve+tuto+ecran+youtube",exo:"Enregistrez 2 minutes de votre écran et montez-les dans Resolve."},
+    {d:35,p:2,t:"Les multicam — monter plusieurs angles",note:"Clic droit sur les clips > Create Multicam Clip. Resolve synchronise automatiquement.",tip:"La synchronisation par audio fonctionne très bien même sans timecode.",video:"Multicam montage plusieurs caméras DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+multicam+montage+plusieurs+cameras",exo:"Synchronisez 2 angles de caméra et montez-les en multicam."},
+    {d:36,p:2,t:"Les templates et presets personnalisés",note:"Tout ce que vous créez peut être sauvegardé comme preset.",tip:"Créez une fois votre style de titre, sauvegardez-le. Réutilisez-le toujours.",video:"Templates presets personnalisés DaVinci Resolve",url:"https://www.youtube.com/results?search_query=davinci+resolve+templates+presets+personnalises+sauvegarder",exo:"Créez et sauvegardez un preset de titre aux couleurs de votre chaîne."},
+    {d:37,p:2,t:"Gérer un long projet",note:"Pour les longs projets, utilisez des Timelines multiples : une par scène.",tip:"Une timeline par scène = plus facile à modifier sans tout casser.",video:"Longs projets documentaire vlog DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+long+projet+documentaire+vlog+organisation",exo:"Créez un projet à 3 parties avec 3 timelines et assemblez-les."},
+    {d:38,p:2,t:"Les chroma key (fond vert)",note:"Dans la page Color : Qualifier > HSL Qualifier. Sélectionnez la couleur verte.",tip:"Pour un bon chroma key : fond bien éclairé, uniforme, pas de vert sur vous.",video:"Chroma key fond vert DaVinci Resolve français",url:"https://www.youtube.com/results?search_query=davinci+resolve+chroma+key+fond+vert+tuto+francais",exo:"Réalisez un chroma key simple et remplacez le fond par une image."},
+    {d:39,p:2,t:"Optimiser les performances",note:"Resolve peut être lent. Activez les proxies (basse résolution).",tip:"Raccourci rendering : activez 'Optimized Media' pour fluidifier la lecture.",video:"Performance proxies optimiser DaVinci Resolve",url:"https://www.youtube.com/results?search_query=davinci+resolve+proxies+optimiser+performance+lent",exo:"Créez des médias optimisés pour votre projet en cours."},
+    {d:40,p:2,t:"Révision Phase 2 + mini-projet",note:"Phase 2 finie ! Vous êtes capable d'un montage YouTube professionnel.",tip:"Publiez quelque chose ! Même imparfait. L'audience apprend plus qu'un cours.",video:"Projet YouTube complet DaVinci phase 2",url:"https://www.youtube.com/results?search_query=davinci+resolve+projet+complet+youtube+montage+avance",exo:"Publiez (ou préparez) votre première vraie vidéo YouTube montée."},
+    {d:41,p:2,t:"Introduction à la page Fusion",note:"Fusion est le compositeur d'effets. C'est comme After Effects mais intégré.",tip:"Fusion peut sembler complexe. Commencez par les templates.",video:"Introduction Fusion DaVinci Resolve débutant",url:"https://www.youtube.com/results?search_query=davinci+resolve+fusion+introduction+debutant+francais",exo:"Ouvrez Fusion et appliquez un effet de texte animé pré-fait."},
+    {d:42,p:2,t:"Créer des animations simples dans Fusion",note:"Les nodes (nœuds) représentent des opérations. MediaIn → Transform → Text → MediaOut.",tip:"Pensez aux nodes comme des blocs Lego qui se connectent.",video:"Fusion nodes animation DaVinci simple",url:"https://www.youtube.com/results?search_query=davinci+resolve+fusion+nodes+animation+tuto+simple",exo:"Créez un texte qui apparaît progressivement avec Fusion."},
+    {d:43,p:2,t:"Les LUTs — Look Up Tables",note:"Les LUTs sont des filtres colorimétriques préconçus. Fichiers .cube.",tip:"LUTs gratuits : Lutify.me, IWLTBAP, RocketStock.",video:"LUTs gratuits appliquer DaVinci Resolve",url:"https://www.youtube.com/results?search_query=davinci+resolve+luts+gratuits+appliquer+tuto+francais",exo:"Téléchargez 3 LUTs gratuits et testez-les sur vos clips."},
+    {d:44,p:2,t:"Les effets sonores et la bibliothèque audio",note:"DaVinci inclut une librairie de sons (Fairlight Sound Library).",tip:"Freesound.org propose des milliers d'effets sonores gratuits.",video:"Effets sonores Fairlight bibliothèque DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+effets+sonores+fairlight+bibliotheque",exo:"Ajoutez 3 effets sonores pertinents à votre dernière vidéo."},
+    {d:45,p:2,t:"Révision et projet Phase 2 final",note:"Vous avez fait la moitié du chemin ! Votre niveau dépasse le débutant.",tip:"Regardez une vidéo YouTube pro et décortiquez son montage.",video:"Analyse montage YouTube professionnel technique",url:"https://www.youtube.com/results?search_query=analyse+montage+youtube+professionnel+technique",exo:"Analysez 2 vidéos YouTube pros et listez 5 techniques à reproduire."},
+    {d:46,p:3,t:"Introduction à Fairlight (audio)",note:"Fairlight est le studio audio de DaVinci. Remplace Audacity.",tip:"Fairlight pour l'audio sérieux. Edit ne donne qu'un contrôle de base.",video:"Introduction Fairlight audio DaVinci Resolve",url:"https://www.youtube.com/results?search_query=davinci+resolve+fairlight+introduction+audio+tuto",exo:"Explorez tous les panneaux de Fairlight pendant 30 min."},
+    {d:47,p:3,t:"L'égalisation (EQ)",note:"L'EQ permet de booster ou couper des fréquences. Voix claire : coupez < 80Hz, boostez 3-5kHz.",tip:"EQ pour voix YouTube : High-pass filter à 80Hz, boost 3-5kHz.",video:"EQ égalisation voix Fairlight DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+fairlight+eq+egalisation+voix+tuto",exo:"Appliquez un EQ sur votre piste voix et comparez avant/après."},
+    {d:48,p:3,t:"La compression audio",note:"Le compresseur réduit les pics et monte le niveau général.",tip:"Réglages pour voix : Threshold -18dB, Ratio 3:1, Attack 10ms.",video:"Compression audio voix Fairlight DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+fairlight+compression+audio+voix",exo:"Appliquez un compresseur sur votre voix et normalisez."},
+    {d:49,p:3,t:"Supprimer le bruit de fond",note:"Fairlight > Effects > Noise Reduction. Laissez Resolve analyser.",tip:"Enregistrez 2-3 secondes de silence dans votre environnement.",video:"Réduction bruit fond Fairlight DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+fairlight+reduction+bruit+fond+tuto",exo:"Nettoyez le bruit de fond d'un enregistrement vocal."},
+    {d:50,p:3,t:"50 jours — bilan et célébration",note:"Mi-parcours ! Vous avez couvert montage, effets, Fusion et audio.",tip:"Regardez votre première vidéo sous Resolve. Voyez votre progression !",video:"Progression montage débutant vers avancé YouTube",url:"https://www.youtube.com/results?search_query=progression+montage+video+debutant+avance+youtube",exo:"Remontez votre premier projet. Comparez les résultats."},
+    {d:51,p:3,t:"La reverb et les effets spatiaux",note:"La reverb simule un espace acoustique. Légère reverb = du corps.",tip:"Pour YouTube : reverb légère (Room 20%, Wet 15%). Voix sèche.",video:"Reverb echo effets audio Fairlight DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+fairlight+reverb+echo+effets+audio",exo:"Comparez votre voix sans reverb, light, et heavy."},
+    {d:52,p:3,t:"Mixer une scène complète",note:"Mixer = équilibrer tous les éléments audio : voix, musique, effets.",tip:"Voix -12dB, musique -24dB, effets -18dB.",video:"Mixer audio voix musique Fairlight DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+fairlight+mixer+audio+voix+musique+effets",exo:"Mixez une scène de 2 min avec voix, musique et 2 effets."},
+    {d:53,p:3,t:"Les effets visuels Fusion — approfondissement",note:"Fusion : particules, motion tracking, compositing avancé.",tip:"Choisissez un effet par semaine et approfondissez.",video:"Fusion effets visuels avancés DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+fusion+effets+visuels+avances+tuto",exo:"Créez un effet de particules dans Fusion."},
+    {d:54,p:3,t:"Le motion tracking",note:"Le tracker permet de suivre un objet et d'y attacher un texte.",tip:"Pour : coller un texte sur un objet, flouter un visage qui bouge.",video:"Motion tracking objet DaVinci Resolve français",url:"https://www.youtube.com/results?search_query=davinci+resolve+motion+tracking+objet+tuto+francais",exo:"Trackez un objet et attachez-y un texte."},
+    {d:55,p:3,t:"Les transitions Fusion personnalisées",note:"Créez vos propres transitions dans Fusion.",tip:"Les transitions perso = votre signature visuelle.",video:"Transitions Fusion personnalisées DaVinci créer",url:"https://www.youtube.com/results?search_query=davinci+resolve+fusion+transitions+personnalisees+creer",exo:"Créez une transition unique et sauvegardez-la."},
+    {d:56,p:3,t:"Les effets speed ramp",note:"Speed Remap permet de varier la vitesse dans un clip.",tip:"Speed ramp très populaire en montage YouTube.",video:"Speed ramp retime DaVinci Resolve français",url:"https://www.youtube.com/results?search_query=davinci+resolve+speed+ramp+retime+tuto+francais",exo:"Créez un speed ramp : ralenti → normal → accéléré."},
+    {d:57,p:3,t:"Créer des animations de texte",note:"Combinez Fusion + keyframes pour des animations.",tip:"Inspirez-vous des chaînes YouTube que vous aimez.",video:"Texte animé Fusion DaVinci apparition lettres",url:"https://www.youtube.com/results?search_query=davinci+resolve+fusion+texte+anime+apparition+tuto",exo:"Créez un titre animé avec apparition lettre par lettre."},
+    {d:58,p:3,t:"Les effets Glow et Lens Flare",note:"Glow ajoute un éclat lumineux à une scène.",tip:"Utilisez avec parcimonie. Moins = mieux.",video:"Glow lens flare effets lumière DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+glow+lens+flare+effets+lumiere+tuto",exo:"Ajoutez un Glow subtil sur des lumières."},
+    {d:59,p:3,t:"Créer un générique de fin YouTube",note:"20 secondes : liens vers vidéos, bouton s'abonner.",tip:"Montez le générique, puis interactivité dans YouTube Studio.",video:"Générique fin YouTube écran final DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+generique+fin+youtube+ecran+final+tuto",exo:"Créez un générique de fin de 20 sec."},
+    {d:60,p:3,t:"Révision Phase 3",note:"Phase 3 : Fairlight, Fusion, tracking, effets avancés.",tip:"Votre chaîne doit avoir une identité visuelle cohérente.",video:"Identité visuelle chaîne YouTube cohérence",url:"https://www.youtube.com/results?search_query=identite+visuelle+chaine+youtube+coherence+tuto",exo:"Définissez l'identité visuelle complète de votre chaîne."},
+    {d:61,p:3,t:"Créer une vignette (thumbnail)",note:"Utilisez un freeze frame comme base pour thumbnail.",tip:"Meilleurs thumbnails : visage expressif, texte gros, contraste.",video:"Thumbnail miniature YouTube DaVinci Resolve",url:"https://www.youtube.com/results?search_query=davinci+resolve+thumbnail+miniature+youtube+tuto",exo:"Créez la thumbnail de votre prochaine vidéo."},
+    {d:62,p:3,t:"Le compositing avancé",note:"Superposer plusieurs éléments visuels dans Fusion.",tip:"Commencez simple : fond + texte + effet.",video:"Compositing Fusion avancé DaVinci français",url:"https://www.youtube.com/results?search_query=davinci+resolve+fusion+compositing+avance+tuto+francais",exo:"Créez une composition avec 3 éléments superposés."},
+    {d:63,p:3,t:"Les animations de logo",note:"Importez votre logo et animez-le dans Fusion.",tip:"Un logo animé de 2-3 sec renforce votre marque.",video:"Animation logo intro Fusion DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+fusion+animation+logo+intro+tuto",exo:"Animez votre logo pour créer une courte intro."},
+    {d:64,p:3,t:"Les effets atmosphériques",note:"Fx comme pluie, neige, fumée dans Fusion.",tip:"Compatibles si l'éclairage de la scène correspond.",video:"Effets atmosphériques pluie neige Fusion DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+fusion+effets+pluie+neige+particules",exo:"Ajoutez un fx de particules à une scène."},
+    {d:65,p:3,t:"Bilan Phase 3 et projet créatif",note:"Outils pour créer des vidéos impressionnantes.",tip:"Phase 4 couvre l'étalonnage professionnel.",video:"Bilan projet avancé YouTube DaVinci phase 3",url:"https://www.youtube.com/results?search_query=davinci+resolve+bilan+projet+avance+youtube+pro",exo:"Créez une vidéo de 3 min avec 5 techniques de phase 3."},
+    {d:66,p:4,t:"Introduction à l'étalonnage",note:"Ajuster les couleurs pour créer une ambiance. Page Color.",tip:"Ne sautez pas ! C'est ce qui donne l'aspect cinématographique.",video:"Introduction étalonnage color grading DaVinci français",url:"https://www.youtube.com/results?search_query=davinci+resolve+etalonnage+color+grading+introduction+francais",exo:"Explorez tous les panneaux de la page Color."},
+    {d:67,p:4,t:"Comprendre les scopes vidéo",note:"Waveform = luminosité. Parade = couleurs. Vectorscope = saturation.",tip:"Faites confiance aux scopes plutôt qu'à vos yeux.",video:"Scopes waveform vectorscope DaVinci Resolve",url:"https://www.youtube.com/results?search_query=davinci+resolve+scopes+waveform+vectorscope+parade+tuto",exo:"Analysez 3 clips avec les scopes."},
+    {d:68,p:4,t:"L'exposition et le contraste",note:"Lift = ombres. Gamma = midtones. Gain = hautes lumières.",tip:"Commencez toujours par l'exposition.",video:"Exposition contraste Lift Gamma Gain DaVinci Color",url:"https://www.youtube.com/results?search_query=davinci+resolve+exposition+contraste+lift+gamma+gain+tuto",exo:"Corrigez l'expo de 5 clips différents."},
+    {d:69,p:4,t:"La balance des couleurs",note:"Color Wheels pour les ombres, midtones, hautes lumières.",tip:"Look cinéma : ombres bleu/teal + lumières orangées.",video:"Balance couleurs Color Wheels DaVinci Resolve",url:"https://www.youtube.com/results?search_query=davinci+resolve+balance+couleurs+color+wheels+tuto",exo:"Appliquez un look cinéma orange et teal."},
+    {d:70,p:4,t:"La saturation et la vibrance",note:"Saturation = intensité. Hue vs Saturation = couleur précise.",tip:"Pour peaux : baissez légèrement le rouge-orange.",video:"Saturation vibrance couleurs DaVinci Resolve",url:"https://www.youtube.com/results?search_query=davinci+resolve+saturation+vibrance+couleurs+tuto",exo:"Boostez le vert sans affecter les peaux."},
+    {d:71,p:4,t:"Les courbes",note:"Contrôle ultra-précis de l'exposition par zone.",tip:"S-curve légère = contraste naturel et élégant.",video:"Courbes S-curve DaVinci Resolve Color",url:"https://www.youtube.com/results?search_query=davinci+resolve+courbes+curves+s+curve+tuto",exo:"Appliquez une S-curve sur 3 clips."},
+    {d:72,p:4,t:"Les nœuds (Nodes) dans Color",note:"Empiler des corrections de façon non-destructive.",tip:"Structure : Node 1 = base | Node 2 = look | Node 3 = secondaire.",video:"Nodes color grading structure DaVinci Resolve",url:"https://www.youtube.com/results?search_query=davinci+resolve+nodes+color+grading+structure+tuto",exo:"Créez une structure à 3 nodes et appliquez-la."},
+    {d:73,p:4,t:"La correction secondaire (Qualifier)",note:"Sélectionnez une couleur précise et modifiez-la.",tip:"Pour : ciel bleu, végétaux verts, correction peau.",video:"Qualifier HSL correction secondaire DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+qualifier+hsl+correction+secondaire+tuto",exo:"Rendez le ciel plus bleu sans toucher au reste."},
+    {d:74,p:4,t:"Les Power Windows (masques)",note:"Étalonner une zone précise de l'image.",tip:"Combinez Qualifier + Power Window pour précision max.",video:"Power Windows masques Color DaVinci Resolve",url:"https://www.youtube.com/results?search_query=davinci+resolve+power+windows+masques+color+tuto",exo:"Éclaircissez uniquement le visage d'un sujet."},
+    {d:75,p:4,t:"Créer et sauvegarder des looks",note:"Gallery : sauvegarder un 'Still' et le réutiliser.",tip:"Créez une librairie : 'Été ensoleillé', 'Intérieur', 'Nuit'.",video:"Stills Gallery sauvegarder looks DaVinci Resolve",url:"https://www.youtube.com/results?search_query=davinci+resolve+stills+gallery+sauvegarder+looks+tuto",exo:"Créez 3 looks et sauvegardez-les."},
+    {d:76,p:4,t:"Appliquer un look à la timeline",note:"Clic droit sur Still > Apply Grade to All Clips.",tip:"Cohérence visuelle immédiate à toute une vidéo.",video:"Appliquer couleur tous clips timeline DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+appliquer+couleur+tous+clips+timeline+tuto",exo:"Appliquez un look à la timeline et ajustez."},
+    {d:77,p:4,t:"L'étalonnage pour YouTube",note:"YouTube compresse. Étalonnez un peu plus fort.",tip:"Exportez et visionnez sur mobile ET desktop.",video:"Étalonnage YouTube optimiser couleurs DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+etalonnage+youtube+optimiser+couleurs+tuto",exo:"Étalonnez pour YouTube et comparez."},
+    {d:78,p:4,t:"Reproduire des looks célèbres",note:"Look Matrix : vert. Look Aquaman : bleu-teal.",tip:"Analysez des films et reproduisez leur palette.",video:"Reproduire look cinéma film DaVinci Resolve",url:"https://www.youtube.com/results?search_query=davinci+resolve+reproduire+look+cinema+film+tuto+francais",exo:"Reproduisez le look colorimétrique d'un film."},
+    {d:79,p:4,t:"L'étalonnage des peaux",note:"Peaux doivent rester naturelles. Qualifier pour protéger.",tip:"Vérifiez sur différents teints.",video:"Étalonnage peaux tons chair DaVinci Resolve",url:"https://www.youtube.com/results?search_query=davinci+resolve+etalonnage+peaux+tons+chair+tuto",exo:"Étalonnez une scène et protégez les tons chair."},
+    {d:80,p:4,t:"Bilan Phase 4 — vous êtes coloriste !",note:"Phase 4 finie ! L'étalonnage est rare et valorisé.",tip:"Proposez vos services à des réalisateurs locaux.",video:"Coloriste freelance DaVinci Resolve carrière",url:"https://www.youtube.com/results?search_query=davinci+resolve+coloriste+freelance+carriere+tuto",exo:"Étalonnez une vidéo complète de A à Z."},
+    {d:81,p:5,t:"Les formats d'export pour YouTube",note:"H.264 (MP4) ou H.265 (HEVC). H.265 = 2x moins gros.",tip:"YouTube réencode toujours. Exportez haute qualité.",video:"Formats export YouTube H264 H265 DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+format+export+youtube+h264+h265+tuto",exo:"Exportez en H.264 et H.265. Comparez."},
+    {d:82,p:5,t:"Exporter pour les réseaux sociaux",note:"Instagram : 1080x1080 ou 1080x1920. TikTok : 9:16.",tip:"Timelines séparées par format.",video:"Export Instagram TikTok Shorts DaVinci Resolve",url:"https://www.youtube.com/results?search_query=davinci+resolve+export+instagram+tiktok+shorts+format+tuto",exo:"Exportez en 3 formats : 16:9, 1:1, 9:16."},
+    {d:83,p:5,t:"Le workflow professionnel",note:"Import → Org → Montage → Affinage → Étalonnage → Mixage → Export.",tip:"Respectez cet ordre.",video:"Workflow professionnel DaVinci Resolve de A à Z",url:"https://www.youtube.com/results?search_query=davinci+resolve+workflow+professionnel+de+a+z+tuto",exo:"Documentez votre workflow personnalisé."},
+    {d:84,p:5,t:"Gérer les projets clients",note:"Exportez en ProRes (Mac) ou DNxHR (Windows).",tip:"Dossier structuré : /Footage /Audio /Exports.",video:"Projets clients professionnel livraison DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+projet+client+professionnel+livraison+tuto",exo:"Simulez une livraison client."},
+    {d:85,p:5,t:"Les raccourcis clavier essentiels",note:"A (sélection), B (Blade), T (trim), J/K/L (lecture).",tip:"2-3 raccourcis par semaine. Doublera votre vitesse.",video:"Raccourcis clavier essentiels DaVinci Resolve français",url:"https://www.youtube.com/results?search_query=davinci+resolve+raccourcis+clavier+essentiels+tuto+francais",exo:"Imprimez et entraînez-vous sur les 20 plus importants."},
+    {d:86,p:5,t:"Les plugins et extensions",note:"Film Impact, Motion Array, Motion VFX.",tip:"Maîtrisez les outils natifs d'abord.",video:"Plugins extensions DaVinci Resolve Motion Array",url:"https://www.youtube.com/results?search_query=davinci+resolve+plugins+extensions+motion+array+tuto",exo:"Installez un pack de transitions gratuit."},
+    {d:87,p:5,t:"Optimiser son ordinateur",note:"16 Go RAM min, 32 Go recommandé. GPU Nvidia/AMD.",tip:"Activez les Proxies si lent.",video:"Optimiser PC RAM GPU DaVinci Resolve performance",url:"https://www.youtube.com/results?search_query=davinci+resolve+optimiser+ordinateur+ram+gpu+performance+tuto",exo:"Optimisez les paramètres de Resolve."},
+    {d:88,p:5,t:"DaVinci vs la concurrence",note:"Resolve = gratuit, meilleur Color. Premiere = Adobe. FCP = Mac.",tip:"Maîtriser Resolve = employable dans l'industrie.",video:"DaVinci Resolve vs Premiere Pro comparaison 2024",url:"https://www.youtube.com/results?search_query=davinci+resolve+vs+premiere+pro+comparaison+2024+tuto",exo:"Listez 5 avantages et 5 limites."},
+    {d:89,p:5,t:"Construire son portfolio",note:"3-5 vidéos variées. Showreel de 60-90 sec.",tip:"Votre meilleur portfolio = YouTube active.",video:"Portfolio monteur vidéo YouTube showreel freelance",url:"https://www.youtube.com/results?search_query=portfolio+monteur+video+youtube+showreel+freelance",exo:"Créez un showreel de 60 sec."},
+    {d:90,p:5,t:"Les tendances du montage 2025",note:"Cuts rapides, captions animées, B-roll cinéma.",tip:"Étudiez les 10 plus grandes chaînes.",video:"Tendances montage YouTube 2025 techniques",url:"https://www.youtube.com/results?search_query=tendances+montage+youtube+2024+2025+techniques",exo:"Intégrez 2 tendances dans votre prochaine vidéo."},
+    {d:91,p:5,t:"Monétisation et montage",note:"Bon montage = meilleur watch time = plus de revenus.",tip:"Analysez les chutes de rétention dans YouTube Studio.",video:"YouTube analytics watch time montage rétention",url:"https://www.youtube.com/results?search_query=youtube+analytics+watch+time+montage+retention+tuto",exo:"Analysez une vidéo et identifiez les chutes."},
+    {d:92,p:5,t:"Collaboration et partage",note:"Studio = collaboration temps réel. Gratuit = XML export.",tip:"Exportez en XML pour partager.",video:"Collaboration partager projet DaVinci Resolve",url:"https://www.youtube.com/results?search_query=davinci+resolve+collaboration+partager+projet+tuto",exo:"Exportez une timeline en XML."},
+    {d:93,p:5,t:"L'IA dans DaVinci Resolve",note:"Magic Mask, Speed Warp, Dialogue Leveler.",tip:"Dialogue Leveler équilibre volume automatiquement.",video:"IA intelligence artificielle Magic Mask DaVinci 18",url:"https://www.youtube.com/results?search_query=davinci+resolve+intelligence+artificielle+magic+mask+speed+warp+tuto",exo:"Testez Magic Mask et Speed Warp."},
+    {d:94,p:5,t:"Créer du contenu vertical",note:"1080x1920 (9:16). Cadrez centré pour 16:9 et 9:16.",tip:"Filmez en 4K centré.",video:"Shorts TikTok vertical 1080x1920 DaVinci Resolve",url:"https://www.youtube.com/results?search_query=davinci+resolve+shorts+tiktok+vertical+1080x1920+tuto",exo:"Remontez en format vertical pour Shorts."},
+    {d:95,p:5,t:"Gérer une chaîne YouTube pro",note:"Filmer → Monter → Étalonner → Thumbnail → SEO → Publier → Analyser.",tip:"Filmez 4 vidéos en une journée, montez une semaine.",video:"Gérer chaîne YouTube workflow production pro",url:"https://www.youtube.com/results?search_query=gerer+chaine+youtube+workflow+production+pro+tuto",exo:"Planifiez la production sur 1 mois."},
+    {d:96,p:5,t:"Les erreurs des débutants",note:"Musique trop forte, trop de transitions, textes illisibles.",tip:"Montrez à quelqu'un avant de publier.",video:"Erreurs montage YouTube débutants à éviter",url:"https://www.youtube.com/results?search_query=erreurs+montage+video+debutants+youtube+a+eviter",exo:"Listez vos 5 erreurs les plus fréquentes."},
+    {d:97,p:5,t:"Automatiser les tâches",note:"Smart Bins et Export Queues.",tip:"Sauvegardez vos presets d'export.",video:"Automatisation Smart Bins Export Queue DaVinci",url:"https://www.youtube.com/results?search_query=davinci+resolve+automatiser+smart+bins+export+queue+tuto",exo:"Créez des presets d'export YouTube et Shorts."},
+    {d:98,p:5,t:"Version Studio — vaut-elle le coup ?",note:"295€ unique : collaboration, IA avancée, FX premium.",tip:"Gratuit suffit pour 95% des YouTubers.",video:"DaVinci Resolve Studio gratuit vs payant 2024",url:"https://www.youtube.com/results?search_query=davinci+resolve+studio+gratuit+vs+payant+vaut+le+coup+2024",exo:"Listez les fonctions Studio dont vous auriez besoin."},
+    {d:99,p:5,t:"Votre projet final — niveau professionnel",note:"Vidéo YouTube parfaite : montage, étalonnage, audio, sous-titres.",tip:"Qualité > rapidité. C'est votre preuve.",video:"Projet final professionnel YouTube DaVinci complet",url:"https://www.youtube.com/results?search_query=davinci+resolve+projet+final+professionnel+youtube+complet",exo:"Créez une vidéo YouTube de 5 min appliquant tous les compétences."},
+    {d:100,p:5,t:"Jour 100 — Félicitations !",note:"Formation complète ! Maîtrise Edit → Étalonnage professionnel.",tip:"Continuez : approfondissez Fusion, audio avancé, coloristes.",video:"Suite formation avancée coloriste Fusion DaVinci 2025",url:"https://www.youtube.com/results?search_query=davinci+resolve+formation+avancee+coloriste+fusion+2024",exo:"Publiez votre vidéo finale et définissez vos 3 prochains objectifs."},
+];
+
+let currentPhase = 0;
+let openDay = null;
+let editingNotes = {};
+const completed = new Set(JSON.parse(localStorage.getItem('dvr_done') || '[]'));
+const notes = JSON.parse(localStorage.getItem('dvr_notes') || '{}');
+
+function save() {
+    localStorage.setItem('dvr_done', JSON.stringify([...completed]));
+    localStorage.setItem('dvr_notes', JSON.stringify(notes));
+}
+
+function renderPhaseNav() {
+    const nav = document.getElementById('phaseNav');
+    nav.innerHTML = phases.map(p =>
+        `<button class="phase-btn ${currentPhase === p.id ? 'active' : ''}" onclick="setPhase(${p.id})">${p.label}</button>`
+    ).join('');
+}
+
+function setPhase(id) {
+    currentPhase = id;
+    renderPhaseNav();
+    renderDays();
+}
+
+function renderDays() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    const filtered = days.filter(d => {
+        const matchPhase = currentPhase === 0 || d.p === currentPhase;
+        const matchSearch = !query || d.t.toLowerCase().includes(query) || d.note.toLowerCase().includes(query) || d.tip.toLowerCase().includes(query);
+        return matchPhase && matchSearch;
+    });
+
+    if (filtered.length === 0) {
+        document.getElementById('daysList').innerHTML = '<div class="empty">Aucun résultat.</div>';
+        return;
+    }
+
+    let html = '';
+    let lastPhase = null;
+    filtered.forEach(d => {
+        if (currentPhase === 0 && d.p !== lastPhase) {
+            html += `<div class="phase-divider">${phaseNames[d.p]}</div>`;
+            lastPhase = d.p;
+        }
+        const done = completed.has(d.d);
+        const isOpen = openDay === d.d;
+        const dayNotes = notes[d.d] || '';
+
+        html += `
+        <div class="day-card ${done ? 'done' : ''} ${isOpen ? 'is-open' : ''}" id="card-${d.d}">
+            <div class="day-head" onclick="toggleDay(${d.d})">
+                <span class="day-chip">J${d.d}</span>
+                <span class="day-title-text">${d.t}</span>
+                <div class="badges">
+                    <span class="badge b-note">note</span>
+                    <span class="badge b-tip">💡</span>
+                    <span class="badge b-video">🎥</span>
+                    <span class="badge b-exo">exe</span>
+                </div>
+                ${done ? '<span class="done-mark">✓</span>' : ''}
+                <span class="chevron">▾</span>
+            </div>
+            <div class="day-body ${isOpen ? 'open' : ''}">
+                <div class="section-sep"></div>
+                <div class="section-title">📌 Note du jour</div>
+                <div class="note-block">${d.note}</div>
+                
+                <div class="section-title">💡 Tip professionnel</div>
+                <div class="tip-block">${d.tip}</div>
+                
+                <div class="section-title">🎥 Vidéo recommandée</div>
+                <a class="video-link" href="${d.url}" target="_blank">
+                    <span class="video-icon">▶</span>
+                    ${d.video}
+                </a>
+                
+                <div class="section-title">🏋️ Exercice du jour</div>
+                <div class="exo-block">${d.exo}</div>
+                
+                <div class="section-title">📝 Mes notes personnelles</div>
+                <div class="personal-notes">
+                    <textarea id="note-${d.d}" placeholder="Vos notes, astuces...">${dayNotes}</textarea>
+                    <button class="note-btn" onclick="saveNote(${d.d})">Sauvegarder</button>
+                </div>
+
+                <div class="complex-btn">
+                    <button class="complete-btn ${done ? 'done' : ''}" onclick="toggleDone(${d.d}, event)">
+                        ${done ? '✓ Complété' : 'Marquer comme complété'}
+                    </button>
+                </div>
+            </div>
+        </div>`;
+    });
+    document.getElementById('daysList').innerHTML = html;
+    updateProgress();
+}
+
+function toggleDay(d) {
+    openDay = openDay === d ? null : d;
+    renderDays();
+}
+
+function toggleDone(d, e) {
+    e.stopPropagation();
+    if (completed.has(d)) { completed.delete(d); } else { completed.add(d); }
+    save();
+    renderDays();
+    showToast(completed.has(d) ? '✓ Jour marqué complété!' : 'Jour réactivé', 'success');
+}
+
+function saveNote(d) {
+    const textarea = document.getElementById(`note-${d}`);
+    notes[d] = textarea.value;
+    save();
+    showToast('📝 Notes sauvegardées!', 'success');
+}
+
+function updateProgress() {
+    const count = completed.size;
+    const pct = Math.round(count / 100 * 100);
+    document.getElementById('doneCount').textContent = count;
+    document.getElementById('progressPct').textContent = pct + '%';
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressSub').textContent = `${count} / 100 jours complétés`;
+}
+
+function showToast(msg, type = 'success') {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = msg;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
+function openStatsModal() {
+    const modal = document.getElementById('statsModal');
+    modal.classList.add('open');
+    const count = completed.size;
+    const pct = Math.round(count / 100 * 100);
+    const remaining = 100 - count;
+
+    document.getElementById('totalDone').textContent = count;
+    document.getElementById('completionRate').textContent = pct + '%';
+    document.getElementById('daysRemaining').textContent = remaining;
+    document.getElementById('avgPerDay').textContent = '0';
+
+    let phaseHtml = '';
+    [1,2,3,4,5].forEach(p => {
+        const phaseDays = days.filter(d => d.p === p && completed.has(d.d)).length;
+        const totalDays = days.filter(d => d.p === p).length;
+        const phasePct = Math.round(phaseDays / totalDays * 100);
+        phaseHtml += `
+        <div class="phase-stat-row">
+            <span class="phase-stat-label">${phaseNames[p]}</span>
+            <span class="phase-stat-value">${phaseDays}/${totalDays} (${phasePct}%)</span>
+        </div>`;
+    });
+    document.getElementById('phaseStats').innerHTML = phaseHtml;
+}
+
+function closeStatsModal() {
+    document.getElementById('statsModal').classList.remove('open');
+}
+
+function exportProgress() {
+    const data = {
+        completed: [...completed],
+        notes: notes,
+        exportDate: new Date().toLocaleString('fr-FR'),
+        completionRate: Math.round(completed.size / 100 * 100) + '%'
+    };
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'davinci-progression.json';
+    a.click();
+    showToast('💾 Progression exportée!', 'success');
+}
+
+function resetProgress() {
+    if (confirm('⚠️ Réinitialiser toute votre progression ? Irréversible !')) {
+        completed.clear();
+        Object.keys(notes).forEach(k => delete notes[k]);
+        save();
+        renderDays();
+        showToast('🔄 Progression réinitialisée', 'success');
+    }
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeStatsModal();
+    if (e.ctrlKey && e.key === 's') { e.preventDefault(); exportProgress(); }
+    if (e.ctrlKey && e.key === 'r') { e.preventDefault(); resetProgress(); }
+});
+
+document.getElementById('searchInput').addEventListener('input', renderDays);
+document.getElementById('statsBtn').addEventListener('click', openStatsModal);
+document.getElementById('exportBtn').addEventListener('click', exportProgress);
+document.getElementById('resetBtn').addEventListener('click', resetProgress);
+document.getElementById('statsModal').addEventListener('click', (e) => {
+    if (e.target.id === 'statsModal') closeStatsModal();
+});
+
+renderPhaseNav();
+renderDays();
+
+// Compteur de visiteurs local (simulation)
+(function() {
+    const today = new Date().toDateString();
+    let visitorsKey = 'visitors_' + today;
+    let visitors = parseInt(localStorage.getItem(visitorsKey)) || 0;
+    
+    // Nouveau visiteur = nouvelle session
+    if (!sessionStorage.getItem('visitor_counted')) {
+        visitors++;
+        localStorage.setItem(visitorsKey, visitors);
+        sessionStorage.setItem('visitor_counted', 'true');
+    }
+    
+    // Afficher le compteur
+    const visitorText = document.getElementById('visitorText');
+    if (visitorText) {
+        visitorText.textContent = visitors + ' visiteur' + (visitors > 1 ? 's' : '') + ' aujourd\'hui';
+    }
+    
+    // Mettre à jour en temps réel chaque 30 secondes
+    setInterval(function() {
+        visitors = parseInt(localStorage.getItem(visitorsKey)) || 0;
+        if (visitorText) {
+            visitorText.textContent = visitors + ' visiteur' + (visitors > 1 ? 's' : '') + ' aujourd\'hui';
+        }
+    }, 30000);
+})();
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+        .then(reg => console.log('Service Worker enregistré'))
+        .catch(err => console.log('SW error:', err));
+}
+</script>
+
+</body>
+</html>
